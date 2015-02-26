@@ -22,6 +22,24 @@ YPM_contrib <-nrow((YPM_only <- subset(hol, dwc.institutionCode=="YPM")))
 inst_contribs <- as.numeric(c(FLMNH_contrib,CAS_contrib,MCZ_contrib,YPM_contrib))
 #use cbind to put the institution names with the contributions
 inst_contribs_data_frame <- data.frame(cbind(inst_names, inst_contribs))
-#name the four bars by institution
-names.arg <- unique(hol$dwc.institutionCode)
-barplot(table(inst_contribs))
+#plot the inst_contribs vector and name the four bars by institution
+barplot(inst_contribs, names.arg = unique(hol$dwc.institutionCode))
+##3.a. When was the oldest specimen collected?
+dwc_year_noNA <- data.frame(year=c(na.omit(hol$dwc.year)))
+#edit the dataset to take out incorrectly entered dates (e.g. 94).  This should be improved to edit the wrong
+#dates, but for now I left them out.
+dwc_years_no_errors <- data.frame(subset(dwc_year_noNA, year>1600))
+#print out when the earliest collection was made
+print(paste0("the earliest collection was made in ", min(dwc_years_no_errors)))
+##3.b.
+#create the data subset of specimens collected between 2006 and 2014
+dwc_years_between_2006_2014 <- data.frame(subset(dwc_year_noNA, year<=2014 & year>=2006))
+#count how many columns in the data subset
+how_many_2006_2014 <- nrow(dwc_years_between_2006_2014)
+#count how many columns were in the total data frame
+how_many_total <- nrow(dwc_years_no_errors)
+#find the proportion
+proportion_of_specimens_btw_2006_2014 <- how_many_2006_2014/how_many_total
+#print out the proportion
+print(paste0("the proportions of specimens collected between 2006 and 2014 is ", proportion_of_specimens_btw_2006_2014))
+
