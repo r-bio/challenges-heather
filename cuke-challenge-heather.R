@@ -2,9 +2,11 @@ download.file("http://r-bio.github.io/data/holothuriidae-specimens.csv", "data/h
 download.file("http://r-bio.github.io/data/holothuriidae-nomina-valid.csv","data/holothuriidae-nomina-valid.csv")
 hol <- read.csv(file="data/holothuriidae-specimens.csv", stringsAsFactors=FALSE)
 nom <- read.csv(file="data/holothuriidae-nomina-valid.csv", stringsAsFactors=FALSE)
+################################################################################################################
 ##1. How many specimns in hol data frame?
 Number_of_specimens <- nrow(hol)
 print(paste0("number of specimens in hol data frame = ", Number_of_specimens))
+################################################################################################################
 ##2. a. How many institutions house specimens
 num_institutions <- length(unique(hol$dwc.institutionCode))
 print(paste0(num_institutions , " institutions house speciments"))
@@ -24,6 +26,7 @@ inst_contribs <- as.numeric(c(FLMNH_contrib,CAS_contrib,MCZ_contrib,YPM_contrib)
 inst_contribs_data_frame <- data.frame(cbind(inst_names, inst_contribs))
 #plot the inst_contribs vector and name the four bars by institution
 barplot(inst_contribs, names.arg = unique(hol$dwc.institutionCode))
+################################################################################################################
 ##3.a. When was the oldest specimen collected?
 dwc_year_noNA <- data.frame(year=c(na.omit(hol$dwc.year)))
 #edit the dataset to take out incorrectly entered dates (e.g. 94).  This should be improved to edit the wrong
@@ -42,6 +45,7 @@ how_many_total <- nrow(dwc_years_no_errors)
 proportion_of_specimens_btw_2006_2014 <- how_many_2006_2014/how_many_total
 #print out the proportion
 print(paste0("the proportions of specimens collected between 2006 and 2014 is ", proportion_of_specimens_btw_2006_2014))
+################################################################################################################
 ##4.a
 #make a data frame that shows whether each specimen has class listed (TRUE) or not (FALSE)
 class_true_or_false_data <- data.frame(TF=c(nzchar(c(hol$dwc.class))))
@@ -58,7 +62,11 @@ hol_with_class_info <- data.frame(cbind(dwc.class_vector, hol))
 #remove old dwc.class column
 drops <- c("dwc.class")
 hol_with_new_class_info <- hol_with_class_info[,!(names(hol_with_class_info) %in% drops)]
-
-
+################################################################################################################
+##5
+#creat a subset of nom with only specimens that have subgenera currently
+has_subgenus <- subset(nom,(nzchar(nom$Subgenus.current)==TRUE))
+################################################################################################################
+##6
 
 
