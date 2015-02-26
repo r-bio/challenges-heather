@@ -42,4 +42,23 @@ how_many_total <- nrow(dwc_years_no_errors)
 proportion_of_specimens_btw_2006_2014 <- how_many_2006_2014/how_many_total
 #print out the proportion
 print(paste0("the proportions of specimens collected between 2006 and 2014 is ", proportion_of_specimens_btw_2006_2014))
+##4.a
+#make a data frame that shows whether each specimen has class listed (TRUE) or not (FALSE)
+class_true_or_false_data <- data.frame(TF=c(nzchar(c(hol$dwc.class))))
+#create a variable that is the number of occurrences of FALSE in the above data frame
+missing_class <- nrow(subset(class_true_or_false_data, TF==FALSE))
+#print how many FALSEs there were in the data frame
+print(paste0(missing_class," specimens have class information missing"))
+##4.b
+#create a vector with the appropriate number of elements for specimens and the value Holothuroidea
+dwc.class <- c("Holuthurodiea")
+dwc.class_vector <- rep(dwc.class, 2984)
+#merge this new vector with the hol data frame
+hol_with_class_info <- data.frame(cbind(dwc.class_vector, hol))
+#remove old dwc.class column
+drops <- c("dwc.class")
+hol_with_new_class_info <- hol_with_class_info[,!(names(hol_with_class_info) %in% drops)]
+
+
+
 
