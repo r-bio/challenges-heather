@@ -93,7 +93,13 @@ specimens_invalid_sp_name <- nom_and_hol[! is.na(nom_and_hol$Status), ]
 ##6e.Select only the columns: idigbio.uuid, dwc.genus, dwc.specificEpithet, dwc.institutionCode, dwc.catalogNumber 
 ##from this data frame and export the data as a CSV file (using the function write.csv) named 
 ##holothuriidae-invalid.csv
-#PROBLEM: This isn't working, getting 0 obs
-column_subset <- (specimens_invalid_sp_name[, c("idigbio.uuid","dwc.genus","dwc.specificEpithet",
-                                                        "dwc.institutionCode","dwc.catalogNumber")]) 
+#PROBLEM: This isn't working, getting 0 obs whether paste or unique is used
+column_subset <- paste(specimens_invalid_sp_name$idigbio.uuid,
+                                                   specimens_invalid_sp_name$dwc.genus,
+                                                   specimens_invalid_sp_name$dwc.specificEpithet,
+                                                        specimens_invalid_sp_name$dwc.institutionCode,
+                                                   specimens_invalid_sp_name$dwc.catalogNumber, sep= " ", 
+                       collapse=NULL)
+column_subset <- unique(specimens_invalid_sp_name[, c("dwc.genus","dwc.specificEpithet",
+                                                      "dwc.institutionCode", "dwc.catalogNumber")])
 
