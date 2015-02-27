@@ -67,6 +67,33 @@ hol_with_new_class_info <- hol_with_class_info[,!(names(hol_with_class_info) %in
 #creat a subset of nom with only specimens that have subgenera currently
 has_subgenus <- subset(nom,(nzchar(nom$Subgenus.current)==TRUE))
 ################################################################################################################
-##6
-
+##6a. With the function paste(), create a new column (called genus_species) that contains the genus (column dwc.genus)
+##and species names (column dwc.specificEpithet) for the hol data frame.
+#Create the genus_species column by pasting the genus and specificEpithet together
+genus_species <- (paste(hol$dwc.genus, hol$dwc.specificEpithet, sep= " ", collapse=NULL))
+#Use cbind to add the genus_species column to the hol data frame
+hol_with_class_info_and_genusspecies <- data.frame(cbind(genus_species, hol_with_new_class_info))
+##6b.Do the same thing with the nom data frame (using the columns Genus.current and species.current).
+#Create the genus_species column by pasting the Genus.current and species.current together
+genus_species <- (paste(nom$Genus.current, nom$species.current, sep= " ", collapse=NULL))
+#Use cbind to add the genus_species column to the hol data frame
+nom_with_genusspecies <- data.frame(cbind(genus_species, nom))
+##6c. Use merge() to combine hol and nom (hint: you will need to use the all.x argument, read the help to figure 
+##it out, and check that the resulting data frame has the same number of rows as hol).
+#PROBLEML:nom_and_hol has 2814 obs when all.x=FALSE and 2917 when all.x=TRUE, but it never has the total 2984 obs
+#in hol.
+nom_and_hol <- merge(nom_with_genusspecies,hol_with_class_info_and_genusspecies, 
+                     by.x="genus_species",  by.y="genus_species", all.x=TRUE)
+##6d.Create a data frame that contains the information for the specimens identified with an invalid species name
+##(content of the column Status is not NA)? (hint: specimens identified only with a genus name shouldn't be 
+#included in this count.)
+#create new data frame from nom_and_hol rows where the Status column is not na
+#PROBLEM: This returns all rows
+specimens_invalid_sp_name <- nom_and_hol[! is.na(nom_and_hol$Status), ]
+##6e.Select only the columns: idigbio.uuid, dwc.genus, dwc.specificEpithet, dwc.institutionCode, dwc.catalogNumber 
+##from this data frame and export the data as a CSV file (using the function write.csv) named 
+##holothuriidae-invalid.csv
+#PROBLEM: This isn't working, getting 0 obs
+column_subset <- (specimens_invalid_sp_name[, c("idigbio.uuid","dwc.genus","dwc.specificEpithet",
+                                                        "dwc.institutionCode","dwc.catalogNumber")]) 
 
